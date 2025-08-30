@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大悲咒背诵练习</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'KaiTi', '楷体', 'FangSong', '仿宋', 'STKaiti', 'STFangsong', serif;
+            background: linear-gradient(135deg, #2c1810, #3d2817);
+            color: #f4f1e8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: clamp(10px, 3vw, 20px);
+            font-size: clamp(14px, 2.5vw, 16px);
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: clamp(8px, 2vw, 15px);
+            padding: clamp(20px, 5vw, 40px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #8b6914;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: clamp(20px, 5vw, 40px);
+        }
+
+        .title {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: #d4af37;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            font-weight: bold;
+            line-height: 1.2;
+            font-family: 'STKaiti', 'KaiTi', '楷体', '华文楷体', serif;
+            letter-spacing: 0.1em;
+        }
+
+        .subtitle {
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            color: #c9b037;
+            opacity: 0.8;
+            line-height: 1.4;
+            font-family: 'STKaiti', 'KaiTi', '楷体', '华文楷体', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .quiz-section {
+            background: rgba(139, 105, 20, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #8b6914;
+        }
+
+        .question-text {
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            line-height: 1.8;
+            margin-bottom: clamp(15px, 4vw, 20px);
+            color: #f4f1e8;
+            text-align: center;
+            font-family: 'STKaiti', 'KaiTi', '楷体', '华文楷体', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .missing-part {
+            color: #d4af37;
+            font-weight: bold;
+            background: rgba(212, 175, 55, 0.2);
+            padding: 2px 8px;
+            border-radius: 5px;
+            word-break: keep-all;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(10px, 3vw, 15px);
+            margin-bottom: clamp(15px, 4vw, 20px);
+        }
+
+        .option-btn {
+            background: rgba(139, 105, 20, 0.3);
+            border: 2px solid #8b6914;
+            color: #f4f1e8;
+            padding: clamp(12px, 4vw, 15px) clamp(15px, 5vw, 20px);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            font-family: 'STKaiti', 'KaiTi', '楷体', '华文楷体', serif;
+            transition: all 0.3s ease;
+            word-break: keep-all;
+            text-align: center;
+            letter-spacing: 0.03em;
+            line-height: 1.6;
+        }
+
+        @media (min-width: 768px) {
+            .options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-btn:hover {
+            background: rgba(139, 105, 20, 0.5);
+            border-color: #d4af37;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: rgba(34, 139, 34, 0.4);
+            border-color: #228b22;
+        }
+
+        .option-btn.incorrect {
+            background: rgba(139, 34, 34, 0.4);
+            border-color: #8b2222;
+        }
+
+        .next-btn {
+            display: block;
+            margin: clamp(15px, 4vw, 20px) auto 0;
+            background: linear-gradient(45deg, #8b6914, #d4af37);
+            border: none;
+            color: #2c1810;
+            padding: clamp(10px, 3vw, 12px) clamp(25px, 6vw, 30px);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            font-weight: bold;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .next-btn.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .stats {
+            text-align: center;
+            margin-bottom: clamp(15px, 4vw, 20px);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: #c9b037;
+        }
+
+        .full-text-section {
+            background: rgba(139, 105, 20, 0.1);
+            border-radius: clamp(8px, 2vw, 10px);
+            padding: clamp(20px, 5vw, 30px);
+            border: 1px solid #8b6914;
+            margin-top: clamp(20px, 5vw, 30px);
+        }
+
+        .full-text {
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            line-height: 2;
+            text-align: center;
+            color: #f4f1e8;
+            word-break: keep-all;
+            font-family: 'STKaiti', 'KaiTi', '楷体', '华文楷体', serif;
+            letter-spacing: 0.05em;
+        }
+
+        .toggle-btn {
+            background: rgba(139, 105, 20, 0.5);
+            border: 2px solid #8b6914;
+            color: #f4f1e8;
+            padding: clamp(8px, 2.5vw, 10px) clamp(15px, 4vw, 20px);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            margin: 0 auto clamp(15px, 4vw, 20px);
+            display: block;
+            transition: all 0.3s ease;
+            font-family: 'STKaiti', 'KaiTi', '楷体', '华文楷体', serif;
+        }
+
+        .toggle-btn:hover {
+            border-color: #d4af37;
+            background: rgba(139, 105, 20, 0.7);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">大悲咒背诵练习</h1>
+            <p class="subtitle">千手千眼观世音菩萨广大圆满无碍大悲心陀罗尼</p>
+        </div>
+
+        <div class="stats">
+            <span>正确率: <span id="accuracy">0%</span></span> | 
+            <span>已完成: <span id="completed">0</span></span>
+        </div>
+
+        <div class="quiz-section">
+            <div class="question-text" id="question"></div>
+            <div class="options" id="options"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">下一题</button>
+        </div>
+
+        <button class="toggle-btn" onclick="toggleFullText()">显示/隐藏完整经文</button>
+        
+        <div class="full-text-section hidden" id="fullTextSection">
+            <div class="full-text" id="fullText"></div>
+        </div>
+    </div>
+
+    <script>
+        const mantraText = [
+            "南无·喝啰怛那·哆啰夜耶",
+            "南无·阿唎耶",
+            "婆卢羯帝·烁钵啰耶",
+            "菩提萨埵婆耶",
+            "摩诃萨埵婆耶",
+            "摩诃迦卢尼迦耶",
+            "唵",
+            "萨皤啰罚曳",
+            "数怛那怛写",
+            "南无悉吉栗埵·伊蒙阿唎耶",
+            "婆卢吉帝·室佛啰愣驮婆",
+            "南无·那啰谨墀",
+            "醯利摩诃·皤哆沙咩",
+            "萨婆阿他·豆输朋",
+            "阿逝孕",
+            "萨婆萨哆·那摩婆萨哆·那摩婆伽",
+            "摩罚特豆",
+            "怛侄他",
+            "唵·阿婆卢醯",
+            "卢迦帝",
+            "迦罗帝",
+            "夷醯唎",
+            "摩诃菩提萨埵",
+            "萨婆萨婆",
+            "摩啰摩啰",
+            "摩醯摩醯·唎驮孕",
+            "俱卢俱卢·羯蒙",
+            "度卢度卢·罚阇耶帝",
+            "摩诃罚阇耶帝",
+            "陀啰陀啰",
+            "地唎尼",
+            "室佛啰耶",
+            "遮啰遮啰",
+            "摩么·罚摩啰",
+            "穆帝隶",
+            "伊醯伊醯",
+            "室那室那",
+            "阿啰嘇·佛啰舍利",
+            "罚沙罚参",
+            "佛啰舍耶",
+            "呼嚧呼嚧摩啰",
+            "呼嚧呼嚧醯利",
+            "娑啰娑啰",
+            "悉唎悉唎",
+            "苏嚧苏嚧",
+            "菩提夜·菩提夜",
+            "菩驮夜·菩驮夜",
+            "弥帝唎夜",
+            "那啰谨墀",
+            "地利瑟尼那",
+            "波夜摩那",
+            "娑婆诃",
+            "悉陀夜",
+            "娑婆诃",
+            "摩诃悉陀夜",
+            "娑婆诃",
+            "悉陀喻艺",
+            "室皤啰耶",
+            "娑婆诃",
+            "那啰谨墀",
+            "娑婆诃",
+            "摩啰那啰",
+            "娑婆诃",
+            "悉啰僧·阿穆佉耶",
+            "娑婆诃",
+            "娑婆摩诃·阿悉陀夜",
+            "娑婆诃",
+            "者吉啰·阿悉陀夜",
+            "娑婆诃",
+            "波陀摩·羯悉陀夜",
+            "娑婆诃",
+            "那啰谨墀·皤伽啰耶",
+            "娑婆诃",
+            "摩婆利·胜羯啰夜",
+            "娑婆诃",
+            "南无喝啰怛那·哆啰夜耶",
+            "南无阿唎耶·婆嚧吉帝",
+            "烁皤啰夜",
+            "娑婆诃",
+            "唵·悉殿都",
+            "漫多啰",
+            "跋陀耶",
+            "娑婆诃"
+        ];
+
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let totalQuestions = 0;
+        let currentAnswered = false;
+
+        function initFullText() {
+            document.getElementById('fullText').textContent = mantraText.join(' ');
+        }
+
+        function generateQuestion() {
+            if (currentQuestionIndex >= mantraText.length - 1) {
+                currentQuestionIndex = 0;
+            }
+            
+            const correctAnswer = mantraText[currentQuestionIndex + 1];
+            const questionText = mantraText[currentQuestionIndex];
+            
+            const wrongOptions = [];
+            while (wrongOptions.length < 3) {
+                const wrongIndex = Math.floor(Math.random() * mantraText.length);
+                const wrongAnswer = mantraText[wrongIndex];
+                if (wrongAnswer !== correctAnswer && !wrongOptions.includes(wrongAnswer)) {
+                    wrongOptions.push(wrongAnswer);
+                }
+            }
+
+            const allOptions = [correctAnswer, ...wrongOptions];
+            const shuffledOptions = allOptions.sort(() => Math.random() - 0.5);
+
+            return {
+                question: questionText,
+                options: shuffledOptions,
+                correct: correctAnswer,
+                questionNumber: currentQuestionIndex + 1
+            };
+        }
+
+        function displayQuestion() {
+            const questionData = generateQuestion();
+            if (!questionData) return;
+
+            currentQuestion = questionData;
+            currentAnswered = false;
+
+            document.getElementById('question').innerHTML = 
+                `第 ${questionData.questionNumber} 句：请选择 "<span class="missing-part">${questionData.question}</span>" 的下一句：`;
+
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+
+            questionData.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => selectOption(btn, option, questionData.correct);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('nextBtn').classList.remove('show');
+        }
+
+        function selectOption(btn, selected, correct) {
+            if (currentAnswered) return;
+
+            currentAnswered = true;
+            totalQuestions++;
+
+            const allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(button => {
+                button.style.pointerEvents = 'none';
+                if (button.textContent === correct) {
+                    button.classList.add('correct');
+                } else if (button !== btn) {
+                    button.classList.add('incorrect');
+                }
+            });
+
+            if (selected === correct) {
+                btn.classList.add('correct');
+                correctAnswers++;
+            } else {
+                btn.classList.add('incorrect');
+            }
+
+            updateStats();
+            document.getElementById('nextBtn').classList.add('show');
+        }
+
+        function nextQuestion() {
+            const allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(button => {
+                button.style.pointerEvents = 'auto';
+                button.classList.remove('correct', 'incorrect');
+            });
+
+            currentQuestionIndex++;
+            displayQuestion();
+        }
+
+        function updateStats() {
+            const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            document.getElementById('completed').textContent = totalQuestions;
+        }
+
+        function toggleFullText() {
+            const fullTextSection = document.getElementById('fullTextSection');
+            fullTextSection.classList.toggle('hidden');
+        }
+
+        window.onload = function() {
+            initFullText();
+            displayQuestion();
+        };
+    </script>
+</body>
+</html>
